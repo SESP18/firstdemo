@@ -1,0 +1,15 @@
+def get_udpipe_data(data):
+    if len(data) > 0:
+        base_url = "http://lindat.mff.cuni.cz/services/udpipe/api/process?"
+        model = 'urdu-ud-2.0-conll17-170315'
+        features = "tokenizer&tagger&parser"
+        url = base_url + features + "&model=" + model + "&data=" + data
+        result = requests.get(url)
+        
+        if result.status_code == 200:
+            lines = [x.strip() for x in  dict(result.json())["result"].strip().split("\n") if len(x) > 0 and x[0] != "#"]
+            data = []
+            for x in lines:
+                data.append(x.split()[:5])
+            return data
+    return None
